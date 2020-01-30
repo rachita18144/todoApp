@@ -11,10 +11,3 @@ export const addTodo = (task) => {
     task
   }
 }
-
-export const receivedTodos = (todos) => {
-  return {
-    type: 'TODOS_RECEIVED',
-    todos
-  }
-}

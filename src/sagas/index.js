@@ -1,29 +1,40 @@
 //fetch todos, delete todos, add todos, edit todos api calls to be managed from here 
 
 import { call, put, takeEvery, all } from 'redux-saga/effects';
-import {todosRef} from '../config/firebase';
+import axios from 'axios';
+
+function saveTodoApi(todoItem) {
+  return axios.request({
+    method: 'post',
+    url: '/api/v1/save_todo_item',
+    data: todoItem
+  });
+}
+
+function fetchTodoApi(){
+  var result;
+  axios.get('/api/v1/get_all_todo')
+    .then(response => {
+      console.log(response.data);
+      result = response.data
+    }, error => {
+      console.log(error);
+    });
+    return result;
+}
+
+function fetchTodoApiNew(){
+  return axios.get('/api/v1/get_all_todo')
+}
 
 function* fetchTodos() {
-    let todos = [];
     console.log("fetching todos")
-    yield call(todosRef.on('value', function(snapshot) {
-    snapshot.forEach(function(childSnapshot) {
-      var childData = "a";
-      console.log(childData)
-      todos.push(childData)
-    });
-  }));
-
-    yield console.log("array", todos)
-    yield console.log("array length", todos.length)
-    yield console.log("array element at index 0", todos.pop())
-
-    let test = [];
-    test.push('aa');
-    test.push('aa');
-    test.push('aa');
-    console.log("test arry",test.length)
-    yield put({ type: "TODOS_RECEIVED", todos: todos || [{ error: "error" }] });
+    console.log("*3*3")
+    console.log(new Date().getSeconds())
+    console.log(new Date().getMilliseconds()) 
+    let res = yield call(fetchTodoApiNew);
+    console.log(res.data)
+    yield put({ type: "TODOS_RECEIVED", todos: res.data || [{ error: "error" }] });
 }
 
 //watcher, considers only one request(latest) for fetching data
@@ -33,9 +44,9 @@ function* actionWatcher() {
 
 function* addTodos(newToDo) {
   console.log(newToDo);
-  let res = todosRef.push().set(newToDo);
-  console.log(res)
-  yield put({ type: "TODO_ADDED" });
+  let { data } = yield call(saveTodoApi, newToDo);
+  console.log(data)
+  yield put({ type: "TODO_ADDED"});
 }
 
 function* addActionWatcher() {

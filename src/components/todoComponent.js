@@ -34,12 +34,12 @@ class todoComponent extends React.Component {
    super(props);
    this.state = {
       todoVal: "",  
+      isRendered: false
     };
   }
 
   componentDidMount(){
       this.props.getTodos()
-      console.log(this.props.todos)
   }
 
   render() {
@@ -74,11 +74,12 @@ class todoComponent extends React.Component {
           className={classes.button}>Add</Button>
         </Grid>
         <Grid item xs={12}>
-            {console.log(this.props.todos.todos)}
-            {console.log(Array.isArray(this.props.todos.todos))}
-            { Array.isArray(this.props.todos.todos) ? ( 
-              console.log(this.props.todos.todos.pop()))
-              :(<ToDoListItem name={"loading"}/>)} 
+          {console.log("*1*1", this.props.todos)}
+          {console.log(new Date().getSeconds())}
+          {console.log(new Date().getMilliseconds())}
+          {this.props.todos.todos && this.props.todos.todos.map(todo => {
+              return <ToDoListItem key={todo.task} name={todo.task} />
+          })}
         </Grid>
       </React.Fragment>
     );
@@ -90,7 +91,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.todos.todos)
+  console.log(state.todos)
   return {
     todos: state.todos
   }
