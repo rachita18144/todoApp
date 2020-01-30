@@ -1,12 +1,20 @@
-export const getTodos = () => ({
-  type: 'GET_TODOS',
-});
+export const getTodos = () => {
+  return {
+    type: 'GET_TODOS',
+  }
+}
 
-export const addTodo = (task) => ({
-  type: 'ADD_TODO',
-  payload:task
-});
+export const addTodo = (task) => {
+  return {
+    type: 'ADD_TODO',
+    completed: false,
+    task
+  }
+}
 
-export const deleteTodo = () => ({
-    type: 'DELETE_TODO'
-});
+export const receivedTodos = (todos) => {
+  return {
+    type: 'TODOS_RECEIVED',
+    todos
+  }
+}

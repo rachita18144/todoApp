@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {addTodo} from '../actions';
+import {addTodo, getTodos} from '../actions';
+import ToDoListItem from './toDoListItem';
 
 const useStyles = theme => ({
     button: {
@@ -36,6 +37,11 @@ class todoComponent extends React.Component {
     };
   }
 
+  componentDidMount(){
+      this.props.getTodos()
+      console.log(this.props.todos)
+  }
+
   render() {
      const { classes } = this.props;
      var well={
@@ -43,6 +49,7 @@ class todoComponent extends React.Component {
         height: "100px",
         padding: "15px",
         boxShadow: "10px 10px 10px #9E9E9E"
+
     }
     return (
       <React.Fragment>
@@ -66,17 +73,31 @@ class todoComponent extends React.Component {
           onClick={()=>this.props.addTodo(this.state.todoVal)}
           className={classes.button}>Add</Button>
         </Grid>
+        <Grid item xs={12}>
+            {console.log(this.props.todos.todos)}
+            {console.log(Array.isArray(this.props.todos.todos))}
+            { Array.isArray(this.props.todos.todos) ? ( 
+              console.log(this.props.todos.todos.pop()))
+              :(<ToDoListItem name={"loading"}/>)} 
+        </Grid>
       </React.Fragment>
     );
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({addTodo}, dispatch)
+    return bindActionCreators({addTodo, getTodos}, dispatch)
+}
+
+const mapStateToProps = (state) => {
+  console.log(state.todos.todos)
+  return {
+    todos: state.todos
+  }
 }
 
 todoComponent = connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(todoComponent)
 
